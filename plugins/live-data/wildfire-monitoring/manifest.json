@@ -1,0 +1,137 @@
+{
+  "slug": "wildfire-monitoring",
+  "name": "Wildfire Monitoring",
+  "version": "0.3.0",
+  "hostApi": 1,
+  "description": "Live wildfires across Canada from the Canadian Interagency Forest Fire Centre (CIFFC), listed under Live Data in the Datasets menu: location, size and stage of control, with a legend by fire size and switchable layers for wildfire smoke (ECCC FireWork), fire perimeter estimates and the Fire Weather Index (NRCan CWFIS).",
+  "author": "Collab Digital Twins",
+  "icon": "Flame",
+  "category": "live-data",
+  "capabilities": [
+    "map.datasets",
+    "map.layers",
+    "viewer.legends"
+  ],
+  "requiredPermissions": [],
+  "configSchema": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  },
+  "messages": {
+    "en": {
+      "name": "Wildfire Monitoring",
+      "description": "Live wildfires across Canada from the Canadian Interagency Forest Fire Centre (CIFFC), listed under Live Data in the Datasets menu: location, size and stage of control, with a legend by fire size and switchable layers for wildfire smoke (ECCC FireWork), fire perimeter estimates and the Fire Weather Index (NRCan CWFIS).",
+      "title": "Wildfire Monitoring",
+      "legendTitle": "Fires by size",
+      "close": "Close",
+      "bands": {
+        "under50": "Under 50 ha",
+        "from50": "50–500 ha",
+        "from500": "500–1,000 ha",
+        "from1000": "1,000–10,000 ha",
+        "from10000": "10,000 ha and over"
+      },
+      "stage": {
+        "OC": "Out of control",
+        "BH": "Being held",
+        "UC": "Under control",
+        "OUT": "Out"
+      },
+      "response": {
+        "FUL": "Full response",
+        "MOD": "Modified response",
+        "MON": "Monitored response"
+      },
+      "popup": {
+        "reported": "Report date",
+        "response": "Response",
+        "stage": "Stage of control",
+        "size": "Size",
+        "updated": "Latest update"
+      },
+      "reportedIn": "Fires reported in",
+      "overlays": {
+        "smoke": "Wildfire smoke (PM2.5)",
+        "perimeters": "Fire perimeter estimates",
+        "fwi": "Fire Weather Index"
+      }
+    },
+    "fr": {
+      "name": "Surveillance des feux de forêt",
+      "description": "Feux de forêt actifs au Canada selon le Centre interservices des feux de forêt du Canada (CIFFC), sous Données en direct dans le menu Jeux de données : emplacement, superficie et stade de maîtrise, avec une légende par superficie et des couches activables pour la fumée (ECCC FireWork), les périmètres estimés des feux et l'Indice Forêt-Météo (RNCan SCIFF).",
+      "title": "Surveillance des feux de forêt",
+      "legendTitle": "Feux par superficie",
+      "close": "Fermer",
+      "bands": {
+        "under50": "Moins de 50 ha",
+        "from50": "50 à 500 ha",
+        "from500": "500 à 1 000 ha",
+        "from1000": "1 000 à 10 000 ha",
+        "from10000": "10 000 ha et plus"
+      },
+      "stage": {
+        "OC": "Non maîtrisé",
+        "BH": "Contenu",
+        "UC": "Maîtrisé",
+        "OUT": "Éteint"
+      },
+      "response": {
+        "FUL": "Intervention complète",
+        "MOD": "Intervention modifiée",
+        "MON": "Surveillance"
+      },
+      "popup": {
+        "reported": "Date du rapport",
+        "response": "Intervention",
+        "stage": "Stade de maîtrise",
+        "size": "Superficie",
+        "updated": "Dernière mise à jour"
+      },
+      "reportedIn": "Feux signalés en",
+      "overlays": {
+        "smoke": "Fumée des feux (PM2,5)",
+        "perimeters": "Périmètres estimés des feux",
+        "fwi": "Indice Forêt-Météo"
+      }
+    },
+    "es": {
+      "name": "Monitoreo de incendios forestales",
+      "description": "Incendios forestales activos en Canadá del Centre interservices des feux de forêt du Canada (CIFFC), en Datos en vivo del menú de conjuntos de datos: ubicación, superficie y estado de control, con una leyenda por superficie y capas activables de humo (ECCC FireWork), perímetros estimados de incendios e Índice Meteorológico de Incendios (NRCan CWFIS).",
+      "title": "Monitoreo de incendios forestales",
+      "legendTitle": "Incendios por superficie",
+      "close": "Cerrar",
+      "bands": {
+        "under50": "Menos de 50 ha",
+        "from50": "50–500 ha",
+        "from500": "500–1.000 ha",
+        "from1000": "1.000–10.000 ha",
+        "from10000": "10.000 ha o más"
+      },
+      "stage": {
+        "OC": "Fuera de control",
+        "BH": "Contenido",
+        "UC": "Bajo control",
+        "OUT": "Extinguido"
+      },
+      "response": {
+        "FUL": "Respuesta completa",
+        "MOD": "Respuesta modificada",
+        "MON": "Respuesta de monitoreo"
+      },
+      "popup": {
+        "reported": "Fecha del informe",
+        "response": "Respuesta",
+        "stage": "Estado de control",
+        "size": "Superficie",
+        "updated": "Última actualización"
+      },
+      "reportedIn": "Incendios reportados en",
+      "overlays": {
+        "smoke": "Humo de incendios (PM2,5)",
+        "perimeters": "Perímetros estimados de incendios",
+        "fwi": "Índice meteorológico de incendios"
+      }
+    }
+  }
+}

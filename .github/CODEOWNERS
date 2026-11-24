@@ -1,0 +1,6 @@
+# Maintainers review everything; a plugin's author can be added as a co-owner of its folder.
+*                                   @CollabDigitalTwins/maintainers
+
+# Repository rules and CI change only with maintainer review, never a plugin owner alone.
+/.github/                           @CollabDigitalTwins/maintainers
+/scripts/                           @CollabDigitalTwins/maintainers
