@@ -5,6 +5,7 @@ name: CLA Assistant
 # pull_request_target is safe here only because this workflow never checks out pull request code.
 #
 # ONE-TIME SETUP
+#   0. Create the signatures branch, unprotected: git push <remote> main:cla-signatures
 #   1. Optional: a fine-grained PAT with contents:write as the PERSONAL_ACCESS_TOKEN secret, then
 #      uncomment it below, so signature commits re-trigger required checks.
 #   2. Require the "CLA Assistant" status check on `main` in branch protection.
@@ -47,7 +48,7 @@ jobs:
           custom-notsigned-prcomment: |
             Thank you for contributing a plugin to Collab Digital Twins!
 
-            Before we can merge, **all contributors must sign the [Contributor License Agreement](${{ github.server_url }}/${{ github.repository }}/blob/main/CLA.md)**. It is the same agreement used across CDT repositories: you keep the copyright in your work, and the CLA lets us distribute it under both the AGPL-3.0 and our commercial terms. You only sign once.
+            Before we can merge, **all contributors must sign the [Contributor License Agreement](${{ github.server_url }}/${{ github.repository }}/blob/main/CLA.md)**. It is the same agreement used across CDT repositories: you keep the copyright in your work, and the CLA lets us distribute it under both the AGPL-3.0 and our commercial terms. You only sign once for this repository.
 
-            To sign, please post the following comment on this pull request:
+            **To sign, copy the line below and post it as a new comment on this pull request, exactly as written.** The check turns green within a minute; if it doesn't, comment `recheck`. Stuck? See [Signing the CLA](${{ github.server_url }}/${{ github.repository }}/blob/main/CONTRIBUTING.md#signing-the-cla).
           custom-allsigned-prcomment: '✅ All contributors have signed the CLA. Thank you!'
