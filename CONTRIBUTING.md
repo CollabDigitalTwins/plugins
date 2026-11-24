@@ -207,7 +207,7 @@ Set these once on `CollabDigitalTwins/plugins`:
 - **Branch protection on `main`:** require a pull request, one approving review, review from code owners, and the status checks **CI passed** and **CLA Assistant**. Dismiss stale approvals on new commits. Disallow force pushes. Allow squash merges only.
 - **Actions → General:** require approval for all outside collaborators' workflow runs, and set the default workflow token to read-only.
 - **Code security:** turn on private vulnerability reporting, Dependabot alerts, secret scanning and push protection.
-- **CLA signatures branch:** create it once with `git push <this repo's remote> main:cla-signatures`, and keep it out of every branch protection rule and ruleset. Without it, the CLA check fails for everyone with `Branch cla-signatures not found`.
+- **CLA signatures branch:** create it once with `git push <this repo's remote> main:cla-signatures`, and keep it out of every branch protection rule and ruleset. Without it, the CLA check fails for everyone with `Branch cla-signatures not found`. The first run after that creates `signatures/version1/cla.json` and fails once by design, even for allowlisted maintainers; comment `recheck` and it passes.
 - **Teams:** `@CollabDigitalTwins/maintainers` must exist and have write access, or CODEOWNERS reviews will not be requested.
 
 ### Before approving a first-time contributor's CI run
