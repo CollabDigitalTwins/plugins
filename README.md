@@ -97,17 +97,19 @@ The folder name is only a convenience. **A plugin's identity is the `slug` in it
 
 You need a running CDT instance, either self-hosted from the Docker image or a local development build. Requires Node.js 22 or later.
 
-**1. Clone** this repository into the folder your instance reads plugins from:
+**1. Fork, then clone.** Fork [CollabDigitalTwins/plugins](https://github.com/CollabDigitalTwins/plugins/fork) on GitHub, so you have your own copy to change and to open pull requests from. Then clone your fork into the folder your instance reads plugins from, and add the original as `upstream` to pull in new plugins:
 
 ```bash
 cd /path/to/cdt/plugins
-git clone https://github.com/CollabDigitalTwins/plugins.git cdt-community-plugins
+git clone https://github.com/<you>/plugins.git cdt-community-plugins
+cd cdt-community-plugins
+git remote add upstream https://github.com/CollabDigitalTwins/plugins.git
+git pull upstream main     # later, to get updates
 ```
 
 **2. Build** the plugins. `dist/` is not committed, and a plugin without `dist/index.js` is skipped:
 
 ```bash
-cd cdt-community-plugins
 npm run build
 ```
 

@@ -138,6 +138,8 @@ npm run check
 
 This runs the repository's own tests, validates every plugin, builds them and checks bundle sizes, which is the same validation and build CI does. Fix everything it reports before you push.
 
+> **Declare every type package you import.** If this repository sits inside a CDT app checkout, TypeScript also searches the app's `node_modules`. A missing devDependency, such as `@types/react-dom` for `createPortal`, then type-checks locally and fails in CI. To be sure, test in a clone outside any other project.
+
 ### 8. Commit and open a pull request
 
 Write small commits with direct messages, e.g. `feat(wildfire-monitoring): add a perimeter overlay` or `fix(wildfire-monitoring): keep the popup inside the map`.
