@@ -1,0 +1,20 @@
+{
+  "name": "wildfire-monitoring",
+  "version": "0.3.0",
+  "description": "Live wildfires across Canada from the Canadian Interagency Forest Fire Centre (CIFFC), listed under Live Data in the Datasets menu: location, size and stage of control, with a legend by fire size and switchable layers for wildfire smoke (ECCC FireWork), fire perimeter estimates and the Fire Weather Index (NRCan CWFIS).",
+  "license": "AGPL-3.0-or-later",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@collabdt/plugin-kit": "^0.13.0",
+    "@types/react": "^19",
+    "maplibre-gl": "^5.24.0",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.3"
+  }
+}

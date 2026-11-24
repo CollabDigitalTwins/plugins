@@ -1,0 +1,34 @@
+name: Propose a plugin
+description: Check an idea with maintainers before building it, especially a new category or a new data source.
+labels: [proposal]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What would it do, and for whom?
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options: [live-data, utilities, facility-management, planning, demos, new category (explain below)]
+    validations:
+      required: true
+  - type: input
+    id: capabilities
+    attributes:
+      label: Capabilities
+      description: e.g. map.layers, viewer.legends. See https://docs.collabdt.org/docs/plugins/all-capabilities
+  - type: textarea
+    id: data
+    attributes:
+      label: Data sources
+      description: Each endpoint, who publishes it, its licence or terms, whether it sends CORS headers, and whether it needs a key.
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Before you build
+      options:
+        - label: I searched existing issues and plugins for something similar.
+          required: true

@@ -1,0 +1,40 @@
+name: Bug in a plugin
+description: A plugin in this repository does not work as described.
+labels: [bug]
+body:
+  - type: input
+    id: plugin
+    attributes:
+      label: Plugin
+      description: The folder or slug, e.g. plugins/live-data/wildfire-monitoring
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: The plugin version (manifest.json) and the CDT version or instance you ran it on.
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened, and what you expected
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Turn on the plugin
+        2. Open a map
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Browser console or server log
+      description: Remove tokens, emails and anything else private before pasting.
+      render: text

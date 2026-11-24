@@ -1,0 +1,133 @@
+# Runs on pull requests from forks with a read-only token and no secrets; never switch to pull_request_target.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    outputs:
+      plugins: ${{ steps.plugins.outputs.plugins }}
+    env:
+      BASE_REF: ${{ github.base_ref }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+      - name: Test the repository scripts
+        run: npm test
+      - name: Check manifests, files and version bumps
+        run: |
+          if [ -n "$BASE_REF" ]; then
+            node scripts/validatePlugins.mjs --base "origin/$BASE_REF"
+          else
+            node scripts/validatePlugins.mjs
+          fi
+      - name: Pick the plugins to build
+        id: plugins
+        run: |
+          if [ -n "$BASE_REF" ]; then
+            echo "plugins=$(node scripts/listPlugins.mjs --changed-since "origin/$BASE_REF")" >> "$GITHUB_OUTPUT"
+          else
+            echo "plugins=$(node scripts/listPlugins.mjs)" >> "$GITHUB_OUTPUT"
+          fi
+
+  build:
+    name: Build ${{ matrix.plugin }}
+    needs: validate
+    if: needs.validate.outputs.plugins != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        plugin: ${{ fromJSON(needs.validate.outputs.plugins) }}
+    defaults:
+      run:
+        working-directory: ${{ matrix.plugin }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: ${{ matrix.plugin }}/package-lock.json
+      - name: Install (lifecycle scripts disabled)
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Type-check
+        run: npx --no-install tsc --noEmit
+      - name: Build (fails on any import the platform does not provide)
+        run: npm run build
+      - name: Test
+        run: npm test --if-present
+      - name: Check the bundle size
+        run: |
+          bytes=$(stat -c%s dist/index.js)
+          echo "dist/index.js is $bytes bytes"
+          [ "$bytes" -le 5242880 ] || { echo "::error::dist/index.js exceeds the registry's 5 MiB limit"; exit 1; }
+
+  secrets:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: trufflesecurity/trufflehog@v3.100.1
+        with:
+          extra_args: --results=verified,unknown
+
+  commits:
+    name: No AI attribution
+    runs-on: ubuntu-latest
+    env:
+      BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      BEFORE_SHA: ${{ github.event.before }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+      - name: Check commits for AI attribution
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            node scripts/checkAiAttribution.mjs --range "$BASE_SHA..$HEAD_SHA"
+          elif git cat-file -e "$BEFORE_SHA^{commit}" 2>/dev/null; then
+            node scripts/checkAiAttribution.mjs --range "$BEFORE_SHA..$GITHUB_SHA"
+          else
+            node scripts/checkAiAttribution.mjs
+          fi
+
+  # The one check to require in branch protection: matrix job names change with every pull request.
+  ci-ok:
+    name: CI passed
+    if: always()
+    needs: [validate, build, secrets, commits]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail if any job failed or was cancelled
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+        run: exit 1
+      - run: echo "All checks passed or were not needed."
