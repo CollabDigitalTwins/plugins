@@ -49,7 +49,7 @@ These protect the people who turn plugins on. A pull request that breaks one wil
 
 ### Authorship
 
-16. **Sign the CLA.** On your first pull request a bot asks you to sign the [Contributor License Agreement](CLA.md) by posting a comment. You keep your copyright. If you contribute on behalf of an employer, they sign Part B.
+16. **Sign the CLA.** You keep your copyright; the [Contributor License Agreement](CLA.md) lets us distribute your work under the AGPL and our commercial terms. Signing is one comment on your first pull request, and covers every later one. See [Signing the CLA](#signing-the-cla) below. If you contribute on behalf of an employer, they sign Part B.
 17. **Commits credit people.** You are welcome to use an AI assistant, but no commit may list one as author or co-author (`Co-authored-by:` trailers, "Generated with" footers). Mention it in the pull request description instead.
 18. **Only contribute code you have the right to contribute.** Code copied from elsewhere must be AGPL-compatible, and you credit the source.
 
@@ -104,6 +104,8 @@ npm install        # creates package-lock.json; commit it
 npm run dev        # rebuilds dist/index.js on save
 ```
 
+If you later change dependencies, regenerate the lockfile from scratch (delete `node_modules` and `package-lock.json`, then `npm install`). Updating it in place on Windows or macOS can drop the Linux build tools CI needs, and `npm run check` will tell you if that happened.
+
 With `PLUGINS_DEV="true"` on your instance, refresh the browser to pick up each rebuild. Turn the plugin on from the Plugins page and use it the way a user would, including:
 
 - switching the basemap, and hiding and showing the layer, if it draws on the map
@@ -150,6 +152,32 @@ git push -u origin feat/<plugin-slug>
 
 Open the pull request against `CollabDigitalTwins/plugins:main` and fill in the template. On your first contribution, a maintainer approves the CI run before it starts, and the CLA bot asks you to sign.
 
+#### Signing the CLA
+
+1. Read [CLA.md](CLA.md).
+2. Post this exact comment on your pull request, nothing more and nothing less:
+   ```
+   I have read the CLA Document and I hereby sign the CLA
+   ```
+3. The **CLA Assistant** check turns green within a minute. If it stays red, comment `recheck`.
+
+Until you sign, the CLA check is red. That is expected and is not a problem with your code. If the bot says a commit author is not linked to a GitHub user, add the email from `git log` to your GitHub account (Settings → Emails) and comment `recheck`.
+
+#### When a CI check fails
+
+Open the failed check and scroll to the first red line. The usual causes:
+
+| Check / message | Fix |
+|---|---|
+| **CI passed** with `exit 1` and nothing else | This only summarises the other checks. Open whichever one is red. |
+| **Validate**: any message | It names the plugin and the fix. Run `npm run check` locally to reproduce. |
+| **Build**: `Cannot find module @rollup/rollup-linux-x64-gnu` (or `@esbuild/linux-x64`) | Your lockfile only lists your own operating system's binaries. In the plugin folder delete `node_modules` and `package-lock.json`, run `npm install`, commit the new `package-lock.json`. |
+| **Build**: a type error that passes locally | A missing devDependency; see *Declare every type package you import* above. |
+| **No AI attribution** | Remove `Co-authored-by:` or "Generated with" lines from your commit messages (`git rebase -i`, then `reword`), and force-push your branch. |
+| **CLA Assistant** | See [Signing the CLA](#signing-the-cla). |
+
+Stuck anyway? Comment on the pull request with the link to the failed run, and a maintainer will help.
+
 ### 9. Review
 
 A maintainer reviews every line. Expect questions about network calls, data terms and cleanup. Push fixes as new commits; we squash on merge. If your pull request has gone quiet, a polite ping on it is welcome.
@@ -179,6 +207,7 @@ Set these once on `CollabDigitalTwins/plugins`:
 - **Branch protection on `main`:** require a pull request, one approving review, review from code owners, and the status checks **CI passed** and **CLA Assistant**. Dismiss stale approvals on new commits. Disallow force pushes. Allow squash merges only.
 - **Actions → General:** require approval for all outside collaborators' workflow runs, and set the default workflow token to read-only.
 - **Code security:** turn on private vulnerability reporting, Dependabot alerts, secret scanning and push protection.
+- **CLA signatures branch:** create it once with `git push <this repo's remote> main:cla-signatures`, and keep it out of every branch protection rule and ruleset. Without it, the CLA check fails for everyone with `Branch cla-signatures not found`.
 - **Teams:** `@CollabDigitalTwins/maintainers` must exist and have write access, or CODEOWNERS reviews will not be requested.
 
 ### Before approving a first-time contributor's CI run

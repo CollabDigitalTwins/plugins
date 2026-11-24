@@ -102,6 +102,19 @@ function checkPackage(pkg, manifest) {
   return errors
 }
 
+function missingOptionalPackages(lockfile) {
+  const packages = lockfile?.packages ?? {}
+  return Object.entries(packages).flatMap(([key, entry]) =>
+    Object.keys(entry.optionalDependencies ?? {}).filter((name) => !packages[`node_modules/${name}`] && !packages[`${key}/node_modules/${name}`]),
+  )
+}
+
+function checkLockfile(lockfile) {
+  const missing = missingOptionalPackages(lockfile)
+  if (missing.length === 0) return []
+  return [`package-lock.json only lists the binaries for your operating system (missing ${missing.slice(0, 3).join(', ')}${missing.length > 3 ? ', ...' : ''}), so CI on Linux cannot build. Fix: delete node_modules and package-lock.json, run npm install, commit the new package-lock.json`]
+}
+
 function checkFiles(files, tsupConfig, sourcesWithoutSpdx) {
   const errors = []
   if (!files.has('README.md')) errors.push('README.md is missing')
@@ -114,11 +127,11 @@ function checkFiles(files, tsupConfig, sourcesWithoutSpdx) {
 }
 
 /** Every rule one plugin folder must pass; `plugin` is plain data so this stays pure. */
-export function checkPlugin({ path, manifest, pkg, files, tsupConfig, sourcesWithoutSpdx }) {
+export function checkPlugin({ path, manifest, pkg, lockfile, files, tsupConfig, sourcesWithoutSpdx }) {
   const segments = path.split('/')
   const errors = []
   if (segments.length < 3 || segments.length > 4) errors.push('a plugin sits at plugins/<category>/<plugin> or one project folder deep, never deeper')
-  errors.push(...checkManifest(manifest, segments), ...checkPackage(pkg, manifest), ...checkFiles(files, tsupConfig, sourcesWithoutSpdx))
+  errors.push(...checkManifest(manifest, segments), ...checkPackage(pkg, manifest), ...checkFiles(files, tsupConfig, sourcesWithoutSpdx), ...checkLockfile(lockfile))
   return errors.map((error) => `${path}: ${error}`)
 }
 
@@ -165,6 +178,7 @@ function readPlugin(dir) {
     path,
     manifest: readJson(join(dir, 'manifest.json')),
     pkg: readJson(join(dir, 'package.json')),
+    lockfile: readJson(join(dir, 'package-lock.json')),
     files: new Set(readdirSync(dir)),
     tsupConfig: existsSync(tsupPath) ? readFileSync(tsupPath, 'utf8') : null,
     sourcesWithoutSpdx: sourceFiles(join(dir, 'src')).filter((file) => !hasSpdxHeader(file)).map((file) => repoPath(file).slice(path.length + 1)),

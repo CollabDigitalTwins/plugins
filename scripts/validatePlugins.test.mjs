@@ -38,6 +38,13 @@ describe('checkPlugin', () => {
     assert.deepEqual(checkPlugin(validPlugin()), [])
   })
 
+  it('rejects a lockfile that only lists the optional binaries for one platform', () => {
+    const lockfile = { packages: { 'node_modules/rollup': { optionalDependencies: { '@rollup/rollup-linux-x64-gnu': '4.0.0', '@rollup/rollup-win32-x64-msvc': '4.0.0' } }, 'node_modules/@rollup/rollup-win32-x64-msvc': {} } }
+    assert.ok(checkPlugin(validPlugin({ lockfile })).some(error => error.includes('@rollup/rollup-linux-x64-gnu')))
+    lockfile.packages['node_modules/@rollup/rollup-linux-x64-gnu'] = {}
+    assert.deepEqual(checkPlugin(validPlugin({ lockfile })), [])
+  })
+
   it('rejects slugs the platform rejects', () => {
     for (const slug of ['Example', 'two--hyphens', '-leading', 'a'.repeat(65), 'registry', 'hello-map']) {
       assert.ok(checkPlugin(withManifest({ slug })).some(error => error.includes('slug')), slug)
